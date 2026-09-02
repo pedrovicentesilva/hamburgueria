@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+<rect width="1280" height="720" fill="#171717"/>
+<rect x="70" y="60" width="1140" height="600" rx="35" fill="#241f1f" stroke="#d97706" stroke-width="5"/>
+<!-- burger -->
+<path d="M390 300 C390 185 890 185 890 300 Z" fill="#d99a4a" stroke="#a85f16" stroke-width="8"/>
+<ellipse cx="500" cy="245" rx="12" ry="7" fill="#fff1c7"/><ellipse cx="585" cy="220" rx="12" ry="7" fill="#fff1c7"/><ellipse cx="690" cy="235" rx="12" ry="7" fill="#fff1c7"/><ellipse cx="785" cy="250" rx="12" ry="7" fill="#fff1c7"/>
+<rect x="390" y="300" width="500" height="45" rx="18" fill="#6db23f"/>
+<path d="M390 340 L890 340 L860 385 L420 385 Z" fill="#f0d34f"/>
+<rect x="410" y="385" width="460" height="95" rx="22" fill="#6b351d"/>
+<path d="M400 475 C520 430 760 430 880 475 L865 515 C735 485 545 485 415 515 Z" fill="#d54b2a"/>
+<path d="M420 515 H860 C845 580 435 580 420 515 Z" fill="#d99a4a"/>
+<text x="640" y="625" text-anchor="middle" font-family="Arial, sans-serif" font-size="38" font-weight="700" fill="#ffffff">Sabor &amp; Brasa</text>
+</svg>
