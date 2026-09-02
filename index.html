@@ -1,93 +1,37 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<<<<<<< Updated upstream
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hamburgueria Artesanal - O Melhor Hambúrguer da Cidade</title>
-</head>
-<body>
-
-  <header>
-    <h1>Burger House</h1>
-    <nav>
-      <ul>
-        <li><a href="#cardapio">Cardápio</a></li>
-        <li><a href="#reserva">Reservar Mesa</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <main>
-
-    <section id="cardapio">
-      <h2>Nosso Cardápio</h2>
-      <article>
-        <h3>Classic Burger</h3>
-        <p>Pão brioche, 180g de carne bovina, queijo cheddar e molho da casa.</p>
-      </article>
-      <article>
-        <h3>Bacon Smash</h3>
-        <p>Pão artesanal, dois discos smash de 90g, queijo prato e muito bacon crocante.</p>
-      </article>
-    </section>
-
-    <section id="reserva">
-      <h2>Reserva de Mesa</h2>
-
-      <form action="#" method="POST">
-
-        <fieldset>
-          <legend>Dados da Reserva</legend>
-
-          <div>
-            <label for="nome">Nome Completo:</label>
-            <input type="text" id="nome" name="nome" required>
-          </div>
-
-          <div>
-            <label for="email">E-mail de Contato:</label>
-            <input type="email" id="email" name="email" required>
-          </div>
-
-          <div>
-            <label for="data-reserva">Data da Reserva:</label>
-            <input type="date" id="data-reserva" name="data-reserva" min="2026-09-01">
-          </div>
-
-          <div>
-            <label for="pessoas">Número de Pessoas (1 a 10):</label>
-            <input type="number" id="pessoas" name="pessoas" min="1" max="10">
-          </div>
-
-        </fieldset>
-
-        <button type="submit">Confirmar Reserva</button>
-
-      </form>
-    </section>
-
-  </main>
-
-  <footer>
-    <p>&copy; 2026 Burger House. Todos os direitos reservados.</p>
-  </footer>
-
-</body>
-</html>
-=======
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hamburgueria Sabor & Brasa</title>
+    <title>Hamburgueria Sabor &amp; Brasa</title>
+    <style>
+        /* Estilos básicos para o novo conteúdo multimídia sem alterar a estrutura do projeto. */
+        .midia-apresentacao {
+            max-width: 900px;
+            margin: 2rem auto;
+        }
+
+        .midia-apresentacao video {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+        }
+
+        .status-formatos {
+            font-size: 0.95rem;
+        }
+    </style>
 </head>
 
 <body>
 
     <header>
-        <h1>Sabor & Brasa</h1>
+        <h1>Sabor &amp; Brasa</h1>
         <nav aria-label="Navegação principal">
             <a href="#cardapio">Cardápio</a>
             <a href="#sobre">Sobre nós</a>
+            <a href="#video">Vídeo</a>
             <a href="#pedido">Fazer pedido</a>
         </nav>
     </header>
@@ -120,8 +64,55 @@
         <section id="sobre">
             <h2>Sobre a Hamburgueria</h2>
             <p>
-                A Sabor & Brasa nasceu com o objetivo de oferecer hambúrgueres
+                A Sabor &amp; Brasa nasceu com o objetivo de oferecer hambúrgueres
                 artesanais saborosos e preparados com muito carinho.
+            </p>
+        </section>
+
+        <!-- Conteúdo multimídia: o mesmo vídeo está disponível em MP4 e WebM. -->
+        <section id="video" class="midia-apresentacao">
+            <h2>Conheça a Sabor &amp; Brasa</h2>
+            <p>Confira nossa apresentação em vídeo.</p>
+
+            <!--
+                preload="metadata": adequado para uma página com conteúdo principal e
+                vídeo relativamente longo, pois carrega apenas os metadados inicialmente.
+                O poster evita que o espaço fique visualmente vazio antes da reprodução.
+            -->
+            <video
+                id="video-hamburgueria"
+                controls
+                preload="metadata"
+                poster="midia/poster.png"
+                width="1280"
+                height="720"
+            >
+                <!-- Ordem de preferência: MP4 primeiro, depois WebM. -->
+                <source
+                    src="midia/apresentacao-sabor-brasa.mp4"
+                    type='video/mp4; codecs="avc1.4d401f"'
+                >
+                <source
+                    src="midia/apresentacao-sabor-brasa.webm"
+                    type='video/webm; codecs="vp9"'
+                >
+
+                <!-- Fallback para navegadores que não suportam o elemento video. -->
+                Seu navegador não suporta vídeo HTML5.
+                <a href="midia/apresentacao-sabor-brasa.mp4">Abra o vídeo em MP4</a>.
+            </video>
+
+            <!-- Legendas em WebVTT com três blocos de tempo. -->
+            <track
+                kind="captions"
+                src="midia/legendas.vtt"
+                srclang="pt-BR"
+                label="Português (Brasil)"
+                default
+            >
+
+            <p id="status-formatos" class="status-formatos">
+                Verificando compatibilidade dos formatos...
             </p>
         </section>
 
@@ -171,9 +162,30 @@
     </main>
 
     <footer>
-        <p>&copy; 2026 Sabor & Brasa - Todos os direitos reservados.</p>
+        <p>&copy; 2026 Sabor &amp; Brasa - Todos os direitos reservados.</p>
     </footer>
+
+    <script>
+        // Teste de suporte usando canPlayType(), conforme solicitado na atividade.
+        const video = document.getElementById("video-hamburgueria");
+        const status = document.getElementById("status-formatos");
+
+        const suporteMP4 = video.canPlayType('video/mp4; codecs="avc1.4d401f"');
+        const suporteWebM = video.canPlayType('video/webm; codecs="vp9"');
+
+        console.log("Suporte MP4:", suporteMP4 || "não suportado");
+        console.log("Suporte WebM:", suporteWebM || "não suportado");
+
+        if (suporteMP4 === "probably" || suporteWebM === "probably") {
+            status.textContent =
+                "Compatibilidade: pelo menos um formato retorna "probably". " +
+                `MP4: ${suporteMP4 || "não suportado"} | WebM: ${suporteWebM || "não suportado"}.`;
+        } else {
+            status.textContent =
+                "Nenhum dos formatos retornou "probably" neste navegador. " +
+                `MP4: ${suporteMP4 || "não suportado"} | WebM: ${suporteWebM || "não suportado"}.`;
+        }
+    </script>
 
 </body>
 </html>
->>>>>>> Stashed changes
