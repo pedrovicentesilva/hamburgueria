@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hamburgueria Artesanal - O Melhor Hambúrguer da Cidade</title>
+</head>
+<body>
+
+  <header>
+    <h1>Burger House</h1>
+    <nav>
+      <ul>
+        <li><a href="#cardapio">Cardápio</a></li>
+        <li><a href="#reserva">Reservar Mesa</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <section id="cardapio">
+      <h2>Nosso Cardápio</h2>
+      <article>
+        <h3>Classic Burger</h3>
+        <p>Pão brioche, 180g de carne bovina, queijo cheddar e molho da casa.</p>
+      </article>
+      <article>
+        <h3>Bacon Smash</h3>
+        <p>Pão artesanal, dois discos smash de 90g, queijo prato e muito bacon crocante.</p>
+      </article>
+    </section>
+
+    <section id="reserva">
+      <h2>Reserva de Mesa</h2>
+
+      <form action="#" method="POST">
+
+        <fieldset>
+          <legend>Dados da Reserva</legend>
+
+          <div>
+            <label for="nome">Nome Completo:</label>
+            <input type="text" id="nome" name="nome" required>
+          </div>
+
+          <div>
+            <label for="email">E-mail de Contato:</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+
+          <div>
+            <label for="data-reserva">Data da Reserva:</label>
+            <input type="date" id="data-reserva" name="data-reserva" min="2026-09-01">
+          </div>
+
+          <div>
+            <label for="pessoas">Número de Pessoas (1 a 10):</label>
+            <input type="number" id="pessoas" name="pessoas" min="1" max="10">
+          </div>
+
+        </fieldset>
+
+        <button type="submit">Confirmar Reserva</button>
+
+      </form>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Burger House. Todos os direitos reservados.</p>
+  </footer>
+
+</body>
+</html>
