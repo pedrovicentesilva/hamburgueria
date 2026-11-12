@@ -1,159 +1,157 @@
-/*
- * Tema: Mini-analisador de dados da Hamburgueria Sabor & Brasa (Catálogo de Produtos)
- * Entrada: Um número inteiro representando o limite de estoque para alerta inserido via prompt.
- * Processamento: Validação da entrada, laço for...of para classificar o estoque com if/else if/else, 
- *                switch para categorias, acumulador para valor total do estoque, identificador do item mais caro,
- *                e um laço while para simulação de comandos de atendimento até digitar "sair".
- * Saída: Relatórios formatados via console.table e template literals com classificação e resumos.
- * 
- * Pseudocódigo:
- * 1. Definir array de objetos com 5 hambúrgueres (nome, preco, estoque, categoria).
- * 2. Pedir e validar limite de estoque via prompt.
- * 3. Percorrer o array com for...of:
- *    a. Classificar estoque (Esgotado, Baixo, Normal) usando if/else if/else.
- *    b. Aplicar switch na categoria para mensagens específicas.
- *    c. Acumular valor total e verificar o mais caro.
- * 4. Executar while para ler comandos do usuário até "sair".
- * 5. Exibir console.table e template literals com os resultados.
- */
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. Catálogo centralizado de produtos
+    const catalogo = {
+        classic: { nome: "Classic Burger", preco: 25.90 },
+        bacon: { nome: "Bacon Burger", preco: 29.90 },
+        duplo: { nome: "Duplo Sabor", preco: 34.90 }
+    };
 
-const produtosSaborBrasa = [
-    { nome: "Classic Burger", preco: 25.90, estoque: 15, categoria: "tradicional" },
-    { nome: "Bacon Burger", preco: 29.90, estoque: 8, categoria: "especial" },
-    { nome: "Duplo Sabor", preco: 34.90, estoque: 3, categoria: "duplo" },
-    { nome: "Veggie Burger", preco: 27.90, estoque: 0, categoria: "vegetariano" },
-    { nome: "Chicken Crispy", preco: 26.90, estoque: 12, categoria: "frango" }
-];
+    // Referências aos elementos do DOM
+    const video = document.getElementById("video-hamburgueria");
+    const statusFormatos = document.getElementById("status-formatos");
+    const inputBusca = document.getElementById("busca-cardapio");
+    const itensCardapio = document.querySelectorAll(".item-cardapio");
+    const botoesSelecionar = document.querySelectorAll(".btn-selecionar");
 
-// Entrada e Validação com prompt
-let entradaValida = false;
-let limiteEstoque = 0;
+    const formPedido = document.getElementById("form-pedido");
+    const selectHamburguer = document.getElementById("hamburguer");
+    const inputQuantidade = document.getElementById("quantidade");
+    const spanValorTotal = document.getElementById("valor-total");
+    const divComprovante = document.getElementById("comprovante-pedido");
+    const inputNome = document.getElementById("nome");
+    const inputEmail = document.getElementById("email");
 
-while (!entradaValida) {
-    let inputUsuario = prompt("Digite o limite mínimo de estoque para alerta (0 a 20):");
-    
-    if (inputUsuario === null) {
-        alert("Operação cancelada pelo usuário.");
-        break;
-    }
-    
-    if (inputUsuario.trim() === "") {
-        alert("O campo não pode estar vazio. Tente novamente.");
-        continue;
-    }
-    
-    let numeroConvertido = Number(inputUsuario);
-    
-    if (isNaN(numeroConvertido)) {
-        alert("Valor inválido! Digite apenas números.");
-        continue;
-    }
-    
-    if (numeroConvertido < 0 || numeroConvertido > 20) {
-        alert("Valor fora da faixa permitida (entre 0 e 20). Tente novamente.");
-        continue;
-    }
-    
-    limiteEstoque = numeroConvertido;
-    entradaValida = true;
-}
+    // Formatador de moeda para Real (BRL)
+    const formatarMoeda = (valor) => {
+        return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    };
 
-if (entradaValida) {
-    console.log(`--- RELATÓRIO DA HAMBURGUERIA SABOR & BRASA ---`);
-    console.log(`Limite de estoque informado: ${limiteEstoque}`);
+    // =========================================================
+    // FUNCIONALIDADE 1: Diagnóstico e Eventos do Vídeo
+    // =========================================================
+    if (video && statusFormatos) {
+        const suporteMP4 = video.canPlayType('video/mp4; codecs="avc1.4d401f"');
+        const suporteWebM = video.canPlayType('video/webm; codecs="vp9"');
 
-    let valorTotalEstoque = 0;
-    let produtoMaisCaro = produtosSaborBrasa[0];
-    let relatorioItens = [];
+        let mensagemStatus = suporteMP4 === "probably" || suporteWebM === "probably"
+            ? 'Compatibilidade: pelo menos um formato retorna "probably". '
+            : 'Nenhum dos formatos retornou "probably" neste navegador. ';
 
-    // Processamento com for...of, if / else if / else e switch
-    for (let produto of produtosSaborBrasa) {
-        let statusEstoque = "";
+        mensagemStatus += `MP4: ${suporteMP4 || "não suportado"} | WebM: ${suporteWebM || "não suportado"}.`;
+        statusFormatos.textContent = mensagemStatus;
 
-        // Cadeia if / else if / else com 3 faixas
-        if (produto.estoque === 0) {
-            statusEstoque = "Esgotado";
-        } else if (produto.estoque <= limiteEstoque) {
-            statusEstoque = "Baixo";
-        } else {
-            statusEstoque = "Normal";
-        }
+        // Mostrar duração total assim que os metadados carregarem
+        video.addEventListener("loadedmetadata", () => {
+            const minutos = Math.floor(video.duration / 60);
+            const segundos = Math.floor(video.duration % 60).toString().padStart(2, "0");
+            statusFormatos.textContent += ` | Duração do vídeo: ${minutos}:${segundos}.`;
+        });
 
-        // Uso do switch sobre a categoria do produto
-        let mensagemCategoria = "";
-        switch (produto.categoria) {
-            case "tradicional":
-                mensagemCategoria = "O queridinho dos clientes!";
-                break;
-            case "especial":
-                mensagemCategoria = "Preparado com ingredientes selecionados.";
-                break;
-            case "duplo":
-                mensagemCategoria = "Para quem tem muita fome!";
-                break;
-            case "vegetariano":
-                mensagemCategoria = "Opção leve e saborosa sem carne.";
-                break;
-            case "frango":
-                mensagemCategoria = "Crocante e suculento.";
-                break;
-            default:
-                mensagemCategoria = "Categoria padrão da casa.";
-                break;
-        }
-
-        // Padrão de laço 1: Acumulador (valor total do estoque)
-        let valorItemEstoque = produto.preco * produto.estoque;
-        valorTotalEstoque += valorItemEstoque;
-
-        // Padrão de laço 2: Máximo (produto mais caro)
-        if (produto.preco > produtoMaisCaro.preco) {
-            produtoMaisCaro = produto;
-        }
-
-        relatorioItens.push({
-            Nome: produto.nome,
-            Preço: `R$ ${produto.preco.toFixed(2)}`,
-            Estoque: produto.estoque,
-            Status: statusEstoque,
-            Info: mensagemCategoria
+        // Incentivo ao pedido quando o vídeo terminar
+        video.addEventListener("ended", () => {
+            statusFormatos.textContent = "Ficou com água na boca? Faça o seu pedido logo abaixo!";
         });
     }
 
-    // Exibição dos resultados
-    console.table(relatorioItens);
+    // =========================================================
+    // FUNCIONALIDADE 2: Filtro de Pesquisa no Cardápio
+    // =========================================================
+    if (inputBusca) {
+        inputBusca.addEventListener("input", (evento) => {
+            const termo = evento.target.value.toLowerCase().trim();
 
-    console.log(`Valor total estimado em estoque: R$ ${valorTotalEstoque.toFixed(2)}`);
-    console.log(`Hambúrguer mais caro do cardápio: ${produtoMaisCaro.nome} (R$ ${produtoMaisCaro.preco.toFixed(2)})`);
-
-    // Laço while com condição de saída baseada em comando do usuário
-    console.log("\n--- SIMULAÇÃO DE COMANDOS DE ATENDIMENTO ---");
-    let comando = "";
-    while (comando.toLowerCase() !== "sair") {
-        comando = prompt("Digite um comando ('verificar', 'status') ou digite 'sair' para encerrar:");
-        if (comando === null) {
-            break;
-        }
-        if (comando.toLowerCase() === "sair") {
-            console.log("Encerrando o sistema de atendimento...");
-            break;
-        } else if (comando.toLowerCase() === "verificar") {
-            console.log(`Total de produtos cadastrados: ${produtosSaborBrasa.length}`);
-        } else if (comando.toLowerCase() === "status") {
-            console.log("Sistema operando normalmente. Estoques atualizados.");
-        } else {
-            console.log(`Comando '${comando}' não reconhecido. Digite 'sair' para terminar.`);
-        }
+            itensCardapio.forEach((cartao) => {
+                const textoCartao = cartao.textContent.toLowerCase();
+                if (textoCartao.includes(termo)) {
+                    cartao.style.display = "block";
+                } else {
+                    cartao.style.display = "none";
+                }
+            });
+        });
     }
-}
 
-/*
- * Teste de Mesa (Primeiras 3 voltas do laço principal, assumindo limiteEstoque = 5)
- * --------------------------------------------------------------------------------------------
- * Volta | produto.nome     | produto.estoque | limiteEstoque | statusEstoque (if/else) |
- * ------|------------------|-----------------|---------------|--------------------------|
- * 1     | "Classic Burger" | 15              | 5             | "Normal"                 |
- * 2     | "Bacon Burger"   | 8               | 5             | "Normal"                 |
- * 3     | "Duplo Sabor"    | 3               | 5             | "Baixo"                  |
- * --------------------------------------------------------------------------------------------
- */
+    // =========================================================
+    // FUNCIONALIDADE 3: Cálculo Automático do Total do Pedido
+    // =========================================================
+    const atualizarTotal = () => {
+        const idSelecionado = selectHamburguer.value;
+        const quantidade = parseInt(inputQuantidade.value, 10) || 1;
+        const produto = catalogo[idSelecionado];
+
+        if (produto) {
+            const total = produto.preco * quantidade;
+            spanValorTotal.textContent = formatarMoeda(total);
+        }
+    };
+
+    selectHamburguer.addEventListener("change", atualizarTotal);
+    inputQuantidade.addEventListener("input", atualizarTotal);
+
+    // =========================================================
+    // FUNCIONALIDADE 4: Botões "Escolher este" no Cardápio
+    // =========================================================
+    botoesSelecionar.forEach((botao) => {
+        botao.addEventListener("click", () => {
+            const burgerId = botao.getAttribute("data-burger");
+            selectHamburguer.value = burgerId;
+            atualizarTotal();
+
+            // Deslocação suave até ao formulário
+            document.getElementById("pedido").scrollIntoView({ behavior: "smooth" });
+            inputQuantidade.focus();
+        });
+    });
+
+    // =========================================================
+    // FUNCIONALIDADE 5: Preenchimento Automático (LocalStorage)
+    // =========================================================
+    const carregarDadosCliente = () => {
+        const dadosSalvos = localStorage.getItem("saborBrasaCliente");
+        if (dadosSalvos) {
+            const cliente = JSON.parse(dadosSalvos);
+            inputNome.value = cliente.nome || "";
+            inputEmail.value = cliente.email || "";
+        }
+    };
+    carregarDadosCliente();
+
+    // =========================================================
+    // FUNCIONALIDADE 6: Envio e Resumo do Pedido
+    // =========================================================
+    formPedido.addEventListener("submit", (evento) => {
+        evento.preventDefault(); // Impede o recarregamento da página
+
+        const nome = inputNome.value.trim();
+        const email = inputEmail.value.trim();
+        const idHamburguer = selectHamburguer.value;
+        const quantidade = parseInt(inputQuantidade.value, 10);
+        const observacoes = document.getElementById("observacoes").value.trim();
+
+        const produto = catalogo[idHamburguer];
+        const totalFinal = produto.preco * quantidade;
+
+        // Guardar dados do cliente para futuros pedidos
+        localStorage.setItem("saborBrasaCliente", JSON.stringify({ nome, email }));
+
+        // Gerar número de pedido aleatório
+        const numeroPedido = Math.floor(1000 + Math.random() * 9000);
+
+        // Exibir recibo na tela
+        divComprovante.innerHTML = `
+            <h3>Pedido #${numeroPedido} confirmado!</h3>
+            <p>Obrigado, <strong>${nome}</strong>. Enviámos os detalhes para <em>${email}</em>.</p>
+            <ul>
+                <li><strong>Item:</strong> ${quantidade}x ${produto.nome}</li>
+                <li><strong>Observações:</strong> ${observacoes || "Nenhuma"}</li>
+                <li><strong>Total a pagar:</strong> ${formatarMoeda(totalFinal)}</li>
+            </ul>
+        `;
+        divComprovante.style.display = "block";
+
+        // Limpar apenas as observações e repor a quantidade para 1
+        document.getElementById("observacoes").value = "";
+        inputQuantidade.value = 1;
+        atualizarTotal();
+    });
+});
